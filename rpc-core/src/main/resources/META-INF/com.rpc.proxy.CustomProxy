@@ -1,0 +1,2 @@
+CglibDynamicProxy=com.rpc.proxy.cglib.CglibDynamicProxy
+JdkDynamicProxy=com.rpc.proxy.jdk.JdkDynamicProxy

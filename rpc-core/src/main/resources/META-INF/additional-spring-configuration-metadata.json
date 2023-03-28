@@ -1,0 +1,120 @@
+{
+  "properties": [
+    {
+      "name": "rpc.load-balancer",
+      "type": "java.lang.String",
+      "description": "Load balancing strategy to distribute requests among multiple service providers.",
+      "defaultValue": "RoundRobinLoadBalancer",
+      "hints": {
+        "valueProvider": {
+          "name": "rpc.load-balancer.values",
+          "data": [
+            "RandomLoadBalancer",
+            "RoundRobinLoadBalancer",
+            "ConsistentHashLoadBalancer"
+          ]
+        }
+      }
+    },
+    {
+      "name": "rpc.discovery",
+      "type": "java.lang.String",
+      "description": "Service discovery framework to locate available service providers.",
+      "defaultValue": "NacosServerDiscovery",
+      "hints": {
+        "valueProvider": {
+          "name": "rpc.discovery.values",
+          "data": [
+            "NacosServerDiscovery"
+          ]
+        }
+      }
+    },
+    {
+      "name": "rpc.register",
+      "type": "java.lang.String",
+      "description": "Service registration framework to register service providers and update service list.",
+      "defaultValue": "NacosServerRegister",
+      "hints": {
+        "valueProvider": {
+          "name": "rpc.register.values",
+          "data": [
+            "NacosServerRegister"
+          ]
+        }
+      }
+    },
+    {
+      "name": "rpc.serialize",
+      "type": "java.lang.String",
+      "description": "Serialization library to convert Java objects to binary data and vice versa.",
+      "defaultValue": "JsonSerializer",
+      "hints": {
+        "valueProvider": {
+          "name": "rpc.serialize.values",
+          "data": [
+            "HessianSerializer",
+            "JsonSerializer",
+            "KryoSerializer",
+            "ProtostuffSerializer"
+          ]
+        }
+      }
+    },
+    {
+      "name": "rpc.client",
+      "type": "java.lang.String",
+      "description": "RPC client implementation to handle remote invocation requests.",
+      "defaultValue": "NettyRPCClient",
+      "hints": {
+        "valueProvider": {
+          "name": "rpc.client.values",
+          "data": [
+            "NettyRPCClient"
+          ]
+        }
+      }
+    },
+    {
+      "name": "rpc.proxy",
+      "type": "java.lang.String",
+      "description": "Proxy mode to enable remote method calls on a local interface and map the interface implementation to the corresponding implementation of the remote service.",
+      "defaultValue": "JdkDynamicProxy",
+      "hints": {
+        "valueProvider": {
+          "name": "rpc.proxy.values",
+          "data": [
+            "JdkDynamicProxy",
+            "CglibDynamicProxy"
+          ]
+        }
+      }
+    },
+    {
+      "name": "rpc.provider",
+      "type": "java.lang.String",
+      "description": "Service provider framework to export and publish services to the registry.",
+      "defaultValue": "NacosServiceProvider",
+      "hints": {
+        "valueProvider": {
+          "name": "rpc.provider.values",
+          "data": [
+            "NacosServiceProvider"
+          ]
+        }
+      }
+    },
+    {
+      "name": "rpc.applicationName",
+      "type": "java.lang.String",
+      "description": "Server name.",
+      "defaultValue": "server"
+    },
+    {
+      "name": "rpc.port",
+      "type": "java.lang.Integer",
+      "description": "Server port.",
+      "defaultValue": 8002
+    }
+  ]
+}

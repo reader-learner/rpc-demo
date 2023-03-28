@@ -1,0 +1,8 @@
+# 项目排除路径
+/example-api/target/
+/example-client/target/
+/example-server/target/
+/rpc-common/target/
+/rpc-core/src/main/java/com/rpc/proxy/gen/
+/rpc-core/target/
+/src/main/java/

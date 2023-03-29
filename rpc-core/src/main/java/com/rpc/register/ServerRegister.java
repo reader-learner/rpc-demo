@@ -18,5 +18,5 @@ public interface ServerRegister {
 
     void clearServer(InetSocketAddress serviceAddress);
 
-
+    List<ServiceInstance> getServerAllInstance(String serverName);
 }

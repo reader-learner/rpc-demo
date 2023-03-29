@@ -16,5 +16,5 @@ public interface ServerDiscovery {
      * @return 服务地址
      */
     InetSocketAddress lookupService(RPCRequest rpcRequest);
-    List<ServiceInstance> getServerAllInstance(String serverName);
+
 }

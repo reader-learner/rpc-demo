@@ -41,7 +41,7 @@ public class LocalServerDiscoveryCache extends AbstractServerDiscoveryCache impl
         List<ServiceInstance> serviceInstances = serverCache.get(serverName);
 
         if (CollectionUtils.isEmpty(serviceInstances)) {
-            List<ServiceInstance> allInstance = discovery.getServerAllInstance(serverName);
+            List<ServiceInstance> allInstance = register.getServerAllInstance(serverName);
             if (allInstance.isEmpty()) throw new RPCException(ErrorEnum.SERVER_CAN_NOT_BE_FOUND);
 
             CompletableFuture.runAsync(() -> {

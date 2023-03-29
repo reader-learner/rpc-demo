@@ -2,13 +2,11 @@ package com.rpc.discovery.nacos;
 
 import com.rpc.discovery.AbstractServerDiscovery;
 import com.rpc.discovery.ServerDiscovery;
-import com.rpc.loadbalance.LoadBalancer;
-import com.rpc.properties.RPCProperties;
+import com.rpc.register.AbstractServerRegister;
 import com.rpc.transport.dto.RPCRequest;
 import com.rpc.transport.dto.ServiceInstance;
 import enums.ErrorEnum;
 import exception.RPCException;
-import extension.ExtensionLoader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
@@ -17,14 +15,6 @@ import java.util.List;
 
 @Slf4j
 public class NacosServerDiscovery extends AbstractServerDiscovery implements ServerDiscovery {
-
-    private final LoadBalancer loadBalancer;
-
-
-    public NacosServerDiscovery() {
-        loadBalancer = ExtensionLoader.getExtensionLoader(LoadBalancer.class)
-                .getExtension(RPCProperties.getRPCProperties().getLoadBalancer());
-    }
 
 
     @Override
@@ -41,8 +31,5 @@ public class NacosServerDiscovery extends AbstractServerDiscovery implements Ser
         return new InetSocketAddress(serverAddress.getHost(), serverAddress.getPort());
     }
 
-    @Override
-    public List<ServiceInstance> getServerAllInstance(String serverName) {
-        return discoveryCache.getServiceInstances(serverName);
-    }
+
 }

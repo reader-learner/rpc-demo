@@ -54,7 +54,7 @@ public class NettyChannelProvider {
                 future.complete(listener.channel());
             } else {
                 log.error("failed to connect to server: [{}]", serviceAddress);
-                throw new RPCException(ErrorEnum.FAILED_TO_CONNECT_TO_SERVER);
+//                throw new RPCException(ErrorEnum.FAILED_TO_CONNECT_TO_SERVER);
             }
         });
         return  future.get();

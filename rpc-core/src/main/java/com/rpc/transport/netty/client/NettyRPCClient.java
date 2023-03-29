@@ -1,35 +1,35 @@
 package com.rpc.transport.netty.client;
 
+import com.rpc.transport.AbstractRPCClient;
 import com.rpc.transport.constant.RPCProtocolConstant;
 import com.rpc.transport.dto.RPCMessage;
 import com.rpc.transport.dto.RPCRequest;
 import com.rpc.transport.dto.RPCResponse;
-import com.rpc.transport.netty.codec.NettyMessageDecoder;
-import com.rpc.transport.netty.codec.NettyMessageEncoder;
 import enums.CompressTypeEnum;
 import enums.SerializationEnum;
 import factory.SingletonFactory;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import io.netty.handler.timeout.IdleStateHandler;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import com.rpc.transport.AbstractRPCClient;
+import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
 import java.util.EnumSet;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 实现RPCClient接口
  */
 @Slf4j
+@Component
 public class NettyRPCClient extends AbstractRPCClient {
     private final Bootstrap bootStrap;
     private final EventLoopGroup eventLoopGroup;
@@ -44,6 +44,7 @@ public class NettyRPCClient extends AbstractRPCClient {
 
 
     public NettyRPCClient() {
+
         bootStrap = new Bootstrap();
         eventLoopGroup = new NioEventLoopGroup();
         channelProvider = SingletonFactory.getInstance(NettyChannelProvider.class, bootStrap);
@@ -52,16 +53,7 @@ public class NettyRPCClient extends AbstractRPCClient {
                 .channel(NioSocketChannel.class)
                 .handler(new LoggingHandler(LogLevel.INFO))
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
-                .handler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    protected void initChannel(SocketChannel ch) {
-                        ChannelPipeline p = ch.pipeline();
-                        p.addLast(new IdleStateHandler(0, 20, 0, TimeUnit.SECONDS));
-                        p.addLast(new NettyMessageEncoder());
-                        p.addLast(new NettyMessageDecoder());
-                        p.addLast(new NettyClientHandler(channelProvider));
-                    }
-                });
+                .handler(new ClientInitializer(bootStrap));
     }
 
 

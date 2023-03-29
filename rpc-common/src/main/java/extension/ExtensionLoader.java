@@ -83,7 +83,7 @@ public class ExtensionLoader<T> {
                 EXTENSION_INSTANCES.putIfAbsent(aClass, aClass.newInstance());
                 instance = (T) EXTENSION_INSTANCES.get(aClass);
             } catch (InstantiationException | IllegalAccessException e) {
-                log.error(e.getMessage());
+                log.error(e.getCause().getMessage());
             }
         }
         return instance;
@@ -105,7 +105,7 @@ public class ExtensionLoader<T> {
 
     private void loadDirectory(Map<String, Class<?>> classes) {
         String fileName = ExtensionLoader.SERVICE_DIRECTORY + type.getName();
-        System.out.println(fileName);
+        log.info(fileName);
         try {
             Enumeration<URL> urls;
             ClassLoader classLoader = ExtensionLoader.class.getClassLoader();
@@ -117,7 +117,7 @@ public class ExtensionLoader<T> {
                 }
             }
         } catch (IOException e) {
-            log.error(e.getMessage());
+            log.error(e.getCause().getMessage());
         }
     }
 

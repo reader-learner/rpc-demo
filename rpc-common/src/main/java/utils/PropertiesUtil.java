@@ -43,7 +43,7 @@ public class PropertiesUtil {
             properties = new Properties();
             properties.load(reader);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("未配置rpc.properties文件");
         }
         if (properties != null) {
             propertiesMap.put(fileName, properties);

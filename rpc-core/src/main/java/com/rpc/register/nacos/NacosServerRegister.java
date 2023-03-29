@@ -15,4 +15,6 @@ public class NacosServerRegister implements ServerRegister {
     public void clearServer(InetSocketAddress serviceAddress) {
         NacosUtils.deregisterInstance(serviceAddress);
     }
+
+
 }

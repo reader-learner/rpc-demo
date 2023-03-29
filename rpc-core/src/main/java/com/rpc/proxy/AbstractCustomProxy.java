@@ -11,7 +11,6 @@ import exception.RPCException;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
-
 public abstract class AbstractCustomProxy implements CustomProxy {
     /**
      * Rpc 客户端
@@ -45,6 +44,7 @@ public abstract class AbstractCustomProxy implements CustomProxy {
                 .parameters(args)
                 .group(config.getGroup())
                 .version(config.getVersion())
+                .server(config.getServerName())
                 .build();
         RPCResponse<Object> rpcResponse = rpcClient.sendRequest(rpcRequest);
         checkForResponse(rpcRequest, rpcResponse);

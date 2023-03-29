@@ -24,16 +24,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class NettyClientHandler extends ChannelInboundHandlerAdapter {
     private final UnprocessedRequests unprocessedRequests;
+    private final AtomicInteger idleTimes = new AtomicInteger(0);
     private final NettyChannelProvider channelProvider;
-    private volatile AtomicInteger idleTimes = new AtomicInteger(0);
 
     public NettyClientHandler(NettyChannelProvider channelProvider) {
-        unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
         this.channelProvider = channelProvider;
+        unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
         try {
             if (msg instanceof RPCMessage) {
                 RPCMessage message = (RPCMessage) msg;
@@ -42,12 +42,10 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
                     unprocessedRequests.complete((RPCResponse<Object>) message.getPayload());
                     return;
                 }
-
                 RPCMessage rpcResponse = IdleHandler.invoke(message, messageType);
                 if (rpcResponse != null) {
                     ctx.writeAndFlush(rpcResponse).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
                 }
-
             }
         } finally {
             ReferenceCountUtil.release(msg);
@@ -57,7 +55,7 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
     //在出现超时事件时会被触发，包括读空闲超时或者写空闲超时；
     // 客户端写 服务端读，客户端无法感知服务端是否下线
     @Override
-    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) {
         if (evt instanceof IdleStateEvent) {
             IdleState state = ((IdleStateEvent) evt).state();
             if (state.equals(IdleState.WRITER_IDLE)) {
@@ -69,17 +67,26 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
             } else if (state.equals(IdleState.READER_IDLE)) {
                 // 读超时，服务端未响应心跳
                 int i = idleTimes.incrementAndGet();
-                log.error("server do not send idle response times{}" + i);
-                if (i >= 15) {
+                log.error("server do not send idle response times " + i);
+                if (i >= 2) {
+                    ctx.close();
                     log.error("server disconnection");
                 }
             }
         }
     }
 
+    //重置读事件
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void channelReadComplete(ChannelHandlerContext ctx) {
+        ctx.channel().read();
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         log.error("client catch exception：", cause);
         ctx.close();
     }
+
+
 }

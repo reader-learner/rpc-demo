@@ -4,36 +4,30 @@ import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacos.api.naming.NamingFactory;
 import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.pojo.Instance;
-import enums.ConfigEnum;
+import com.rpc.transport.dto.ServiceInstance;
 import enums.ErrorEnum;
 import exception.RPCException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import utils.PropertiesUtil;
+import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
+@Component
 public class NacosUtils {
     private static final Set<String> registerServers = ConcurrentHashMap.newKeySet();
     private static final NamingService namingService;
-    private static String DEFAULT_NACOS_ADDRESS = "192.168.88.128:8848";
+    private static final String DEFAULT_NACOS_ADDRESS = "192.168.88.128:8848";
 
     static {
         namingService = getNamingService();
-        Properties properties = PropertiesUtil.readProperties(ConfigEnum.RPC_CONFIG_PATH.getValue());
-        if (properties != null) {
-            String o = properties.getProperty(ConfigEnum.NACOS_ADDRESS.getValue());
-            if (StringUtils.isNotEmpty(o)) {
-                DEFAULT_NACOS_ADDRESS = o;
-            }
-        }
     }
+
 
     public static NamingService getNamingService() {
         try {
@@ -81,18 +75,35 @@ public class NacosUtils {
      * @param serverName 服务名称
      * @return 地址实例
      */
-    public static List<String> getAllInstance(String serverName) {
-        List<String> rs = new ArrayList<>();
+//    public static List<String> getAllInstance(String serverName) {
+//        List<String> rs = new ArrayList<>();
+//        if (StringUtils.isEmpty(serverName)) return rs;
+//        try {
+//            List<Instance> allInstances = namingService.getAllInstances(serverName);
+//            allInstances.forEach(v -> {
+//                rs.add(v.getIp() + ":" + v.getPort());
+//            });
+//        } catch (NacosException e) {
+//            log.error("exception when get " + serverName + " instances ", e);
+//        }
+//        return rs;
+//    }
+
+    public static List<ServiceInstance> getServerAllInstances(String serverName) {
+        List<ServiceInstance> rs = new ArrayList<>();
         if (StringUtils.isEmpty(serverName)) return rs;
         try {
             List<Instance> allInstances = namingService.getAllInstances(serverName);
-            allInstances.forEach(v -> {
-                rs.add(v.getIp() + ":" + v.getPort());
-            });
+            for (Instance instance : allInstances) {
+                ServiceInstance serviceInstance = ServiceInstance.builder().serverName(serverName)
+                        .host(instance.getIp()).port(instance.getPort()).metadata(instance.getMetadata()).build();
+                rs.add(serviceInstance);
+            }
         } catch (NacosException e) {
             log.error("exception when get " + serverName + " instances ", e);
         }
         return rs;
     }
+
 
 }

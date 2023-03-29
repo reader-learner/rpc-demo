@@ -20,7 +20,6 @@ public class ServiceConfig {
     }
 
     public String getServiceName() {
-
         return this.getGroup() + ' ' + this.getVersion() + ' ' + getInterfaceName();
     }
 }

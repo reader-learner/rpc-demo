@@ -12,8 +12,8 @@
     <modules>
         <module>rpc-common</module>
         <module>rpc-core</module>
-        <module>example-client</module>
-        <module>example-server</module>
+        <module>client</module>
+        <module>server</module>
         <module>example-api</module>
     </modules>
     <properties>
@@ -45,8 +45,14 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot</artifactId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
             <version>2.7.4</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>2.7.10</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

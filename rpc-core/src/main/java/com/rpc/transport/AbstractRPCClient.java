@@ -1,7 +1,6 @@
 package com.rpc.transport;
 
 import com.rpc.discovery.ServerDiscovery;
-import com.rpc.discovery.nacos.NacosServerDiscovery;
 import com.rpc.properties.RPCProperties;
 import extension.ExtensionLoader;
 
@@ -10,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * 客户端抽象类
  */
+
 public abstract class AbstractRPCClient implements RPCClient {
     /**
      * 数据报ID生成
@@ -21,7 +21,7 @@ public abstract class AbstractRPCClient implements RPCClient {
     protected final ServerDiscovery serverDiscovery;
 
     public AbstractRPCClient() {
-        serverDiscovery = ExtensionLoader.getExtensionLoader(ServerDiscovery.class).getExtension(RPCProperties.discovery);
+        serverDiscovery = ExtensionLoader.getExtensionLoader(ServerDiscovery.class).getExtension(RPCProperties.getRPCProperties().getDiscovery());
     }
 
 }

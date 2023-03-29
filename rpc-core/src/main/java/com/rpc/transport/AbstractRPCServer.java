@@ -10,18 +10,18 @@ import java.util.Set;
 
 public abstract class AbstractRPCServer implements RPCServer {
 
-    protected String host;
     /**
      * 存放扫描到的标注 @RpcService 的服务
      */
-    protected Set<ServiceConfig> serviceConfigs;
+    public static Set<ServiceConfig> serviceConfigs;
+    protected String host;
     protected int port;
     protected ServiceProvider serviceProvider;
 
     {
         serviceConfigs = new HashSet<>();
-        port = RPCProperties.port;
-        host = RPCProperties.host;
+        port = RPCProperties.getRPCProperties().getPort();
+        host = RPCProperties.getRPCProperties().getHost();
     }
 
     @Override

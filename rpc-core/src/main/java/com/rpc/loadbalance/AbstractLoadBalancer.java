@@ -1,13 +1,14 @@
 package com.rpc.loadbalance;
 
 import com.rpc.transport.dto.RPCRequest;
+import com.rpc.transport.dto.ServiceInstance;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
 public abstract class AbstractLoadBalancer implements LoadBalancer {
     @Override
-    public String getServerAddress(List<String> instances, RPCRequest request) {
+    public ServiceInstance getServerAddress(List<ServiceInstance> instances, RPCRequest request) {
         if (CollectionUtils.isEmpty(instances)) {
             return null;
         }
@@ -18,5 +19,5 @@ public abstract class AbstractLoadBalancer implements LoadBalancer {
         return doSelect(instances, request);
     }
 
-    protected abstract String doSelect(List<String> instances, RPCRequest request);
+    protected abstract ServiceInstance doSelect(List<ServiceInstance> instances, RPCRequest request);
 }

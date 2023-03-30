@@ -44,7 +44,6 @@ public class NettyRPCClient extends AbstractRPCClient {
 
 
     public NettyRPCClient() {
-
         bootStrap = new Bootstrap();
         eventLoopGroup = new NioEventLoopGroup();
         channelProvider = SingletonFactory.getInstance(NettyChannelProvider.class, bootStrap);

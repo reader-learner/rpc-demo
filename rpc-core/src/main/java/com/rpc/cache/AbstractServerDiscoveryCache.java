@@ -1,6 +1,5 @@
 package com.rpc.cache;
 
-import com.rpc.discovery.ServerDiscovery;
 import com.rpc.properties.RPCProperties;
 import com.rpc.register.ServerRegister;
 import extension.ExtensionLoader;

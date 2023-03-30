@@ -27,7 +27,7 @@ public class RPCProperties {
     private static volatile RPCProperties rpcProperties;
     private String host = InetAddress.getLoopbackAddress().getHostAddress();
     private String applicationName = "server";
-    private int port=8989;
+    private int port = 8989;
     private String loadBalancer = "RoundRobinLoadBalancer";
     private String discovery = "NacosServerDiscovery";
     private String register = "NacosServerRegister";
@@ -36,7 +36,9 @@ public class RPCProperties {
     private String proxy = "JdkDynamicProxy";
     private String provider = "NacosServiceProvider";
     private String nacosAddress = "192.168.88.128:8848";
-    private String discoverCache ="LocalServerDiscoveryCache";
+    private String discoverCache = "LocalServerDiscoveryCache";
+    private String compress = "GzipCompress";
+
     public static RPCProperties getRPCProperties() {
         if (rpcProperties == null) {
             synchronized (RPCProperties.class) {

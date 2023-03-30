@@ -1,5 +1,10 @@
 package com.rpc.transport.netty.codec;
 
+import com.rpc.compress.Compress;
+import com.rpc.serialize.Serializer;
+import com.rpc.transport.constant.RPCProtocolConstant;
+import com.rpc.transport.dto.RPCMessage;
+import enums.CompressTypeEnum;
 import enums.ErrorEnum;
 import enums.SerializationEnum;
 import exception.RPCException;
@@ -8,9 +13,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 import lombok.extern.slf4j.Slf4j;
-import com.rpc.serialize.Serializer;
-import com.rpc.transport.constant.RPCProtocolConstant;
-import com.rpc.transport.dto.RPCMessage;
 
 /**
  * RPC 数据包
@@ -28,6 +30,8 @@ import com.rpc.transport.dto.RPCMessage;
  */
 @Slf4j
 public class NettyMessageEncoder extends MessageToByteEncoder<RPCMessage> {
+
+
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, RPCMessage rpcMessage, ByteBuf byteBuf) throws Exception {
         try {
@@ -58,6 +62,12 @@ public class NettyMessageEncoder extends MessageToByteEncoder<RPCMessage> {
                         .getExtension(codecName);
                 Object payload = rpcMessage.getPayload();
                 data = serializer.serialize(payload);
+                String compressName = CompressTypeEnum.getName(rpcMessage.getCompress());
+                if (compressName != null) {
+                    Compress compress = ExtensionLoader.getExtensionLoader(Compress.class)
+                            .getExtension(compressName);
+                    data = compress.compress(data);
+                }
             }
             // 写 payload
             if (data != null) {

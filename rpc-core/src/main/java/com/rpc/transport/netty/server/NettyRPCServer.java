@@ -12,9 +12,12 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import utils.RuntimeUtil;
+import utils.thread.ThreadPoolFactoryUtil;
 
 import java.net.InetSocketAddress;
 
@@ -25,7 +28,6 @@ public class NettyRPCServer extends AbstractRPCServer {
     public NettyRPCServer() {
         serviceProvider = ExtensionLoader.getExtensionLoader(ServiceProvider.class)
                 .getExtension(RPCProperties.getRPCProperties().getProvider());
-
     }
 
     @Override
@@ -34,6 +36,7 @@ public class NettyRPCServer extends AbstractRPCServer {
         ServerShutdownHook.getServerShutdownHook().clearAllServiceOnClose(new InetSocketAddress(host, port), serviceProvider);
         NioEventLoopGroup eventLoopGroup = new NioEventLoopGroup();
         NioEventLoopGroup bossGroup = new NioEventLoopGroup(1);
+
         ChannelFuture channelFuture = null;
         try {
             ServerBootstrap bootstrap = new ServerBootstrap();
